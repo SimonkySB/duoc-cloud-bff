@@ -2,6 +2,7 @@ package com.duoc.backend.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +22,12 @@ public class PatientController {
     @Autowired
 	private WebClient.Builder webClientBuilder;
 
-
-    private static final String BASE_URL = "http://ec2-52-23-200-199.compute-1.amazonaws.com:8081/api/patients";
+    @Value("${api.patientUrl}")
+    private String BASE_URL;
 
     @GetMapping
     public Mono<ResponseEntity<String>> findAll() {
+        System.out.println(BASE_URL);
         return webClientBuilder.build()
                 .get()
                 .uri(BASE_URL)
