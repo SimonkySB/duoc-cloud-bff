@@ -1,6 +1,5 @@
 package com.duoc.backend.controllers;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,7 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api/patients")
 public class PatientController {
     @Autowired
-	private WebClient.Builder webClientBuilder;
+    private WebClient.Builder webClientBuilder;
 
     @Value("${api.patientUrl}")
     private String BASE_URL;
@@ -35,7 +34,6 @@ public class PatientController {
                 .toEntity(String.class);
     }
 
-    
     @GetMapping("/{id}")
     public Mono<ResponseEntity<String>> getById(@PathVariable Long id) {
         return webClientBuilder.build()
@@ -45,29 +43,28 @@ public class PatientController {
                 .toEntity(String.class);
     }
 
-    
     @PostMapping
     public Mono<ResponseEntity<String>> add(@RequestBody String model) {
         return webClientBuilder.build()
                 .post()
                 .uri(BASE_URL)
+                .header("Content-Type", "application/json")
                 .bodyValue(model)
                 .retrieve()
                 .toEntity(String.class);
     }
 
-    
     @PutMapping("/{id}")
     public Mono<ResponseEntity<String>> update(@PathVariable Long id, @RequestBody String model) {
         return webClientBuilder.build()
                 .put()
                 .uri(BASE_URL + "/" + id)
+                .header("Content-Type", "application/json")
                 .bodyValue(model)
                 .retrieve()
                 .toEntity(String.class);
     }
 
-    
     @DeleteMapping("/{id}")
     public Mono<ResponseEntity<Void>> delete(@PathVariable Long id) {
         return webClientBuilder.build()
@@ -76,7 +73,6 @@ public class PatientController {
                 .retrieve()
                 .toBodilessEntity();
     }
-
 
     // Vital Sign For Patient
     @GetMapping("/{id}/vital-signs")
@@ -93,6 +89,7 @@ public class PatientController {
         return webClientBuilder.build()
                 .post()
                 .uri(BASE_URL + "/" + id + "/vital-signs")
+                .header("Content-Type", "application/json")
                 .bodyValue(model)
                 .retrieve()
                 .toEntity(String.class);
