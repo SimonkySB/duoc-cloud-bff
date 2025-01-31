@@ -1,7 +1,6 @@
 package com.duoc.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,12 +20,15 @@ public class PatientController {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-    @Value("${api.patientUrl}")
-    private String BASE_URL;
+    
+
+    private String BASE_URL = "http://backend:8081/api/patients";
+
+    
 
     @GetMapping
     public Mono<ResponseEntity<String>> findAll() {
-        System.out.println(BASE_URL);
+        System.out.println(this.BASE_URL);
         return webClientBuilder.build()
                 .get()
                 .uri(BASE_URL)
@@ -89,6 +91,18 @@ public class PatientController {
         return webClientBuilder.build()
                 .post()
                 .uri(BASE_URL + "/" + id + "/vital-signs")
+                .header("Content-Type", "application/json")
+                .bodyValue(model)
+                .retrieve()
+                .toEntity(String.class);
+    }
+
+
+    @PostMapping("/{id}/vital-signs-mq")
+    public Mono<ResponseEntity<String>> addVitalSignMq(@PathVariable Long id, @RequestBody String model) {
+        return webClientBuilder.build()
+                .post()
+                .uri(BASE_URL + "/" + id + "/vital-signs-mq")
                 .header("Content-Type", "application/json")
                 .bodyValue(model)
                 .retrieve()
